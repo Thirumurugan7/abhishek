@@ -44,7 +44,7 @@ const Comp = () => {
                 address: contractAddress,
                 abi: abi,
                 functionName: 'stake',
-                args: [[1]], // Pass the arguments as needed
+                args: [1], // Pass the arguments as needed
             })
             
             // Update points after successful staking
