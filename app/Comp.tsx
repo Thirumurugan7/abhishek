@@ -6,7 +6,7 @@ import abi from "./abi.json"
 
 const Comp = () => {
     const [isStaked, setIsStaked] = useState(false)
-    const { address, isConnected } = useAccount()
+    const { address } = useAccount()
     
     const contractAddress = "0x26D83be2E1aB00168cc859595296C87d04221a82"
     
@@ -26,66 +26,8 @@ const Comp = () => {
         }
     }, [isConfirmed])
     
-    const [pointsData, setPointsData] = useState(null);
-    const [pointsError, setPointsError] = useState<string | null>(null);
-    
+
     // Function to fetch user points
-    const fetchUserPoints = async (address: string) => {
-        try {
-            setPointsError(null);
-            const response = await fetch(`/api/points?address=${address}`);
-            
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to fetch points');
-            }
-            
-            const data = await response.json();
-            setPointsData(data);
-            return data;
-        } catch (error: unknown) {
-            console.error('Error fetching points:', error);
-            setPointsError(error instanceof Error ? error.message : 'Unknown error');
-            return null;
-        }
-    };
-
-    // Function to update user points
-    const updateUserPoints = async (address: string, points: number, reason: string) => {
-        try {
-            setPointsError(null);
-            const response = await fetch('/api/points', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ address, points, reason }),
-            });
-            
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to update points');
-            }
-            
-            const data = await response.json();
-            setPointsData(data);
-            return data;
-        } catch (error: unknown) {
-            console.error('Error updating points:', error);
-            setPointsError(error instanceof Error ? error.message : 'Unknown error');
-            return null;
-        }
-    };
-
-    // Example usage in your component:
-    useEffect(() => {
-        if (address) {
-            fetchUserPoints(address).then(data => {
-                console.log('User points:', data);
-                // Update your UI with the points data
-            });
-        }
-    }, [address]);
 
     const handleStake = async () => {
         if (!address) {
@@ -104,9 +46,7 @@ const Comp = () => {
             })
             
             // Update points after successful staking
-            if (address) {
-                await updateUserPoints(address, 100, 'Staking tokens');
-            }
+    
         } catch (err) {
             console.error("Transaction failed:", err)
             alert("Transaction failed. See console for details.")
@@ -148,7 +88,7 @@ const Comp = () => {
                 <>
                     <div className="mb-6 bg-green-100 dark:bg-green-900 p-4 rounded-lg">
                         <p className="text-green-700 dark:text-green-300 font-medium">
-                            You're successfully staked!
+                            You&apos;re successfully staked!
                         </p>
                     </div>
                     <p className="text-gray-600 dark:text-gray-300 mb-8">

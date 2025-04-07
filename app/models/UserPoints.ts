@@ -32,6 +32,10 @@ const UserPointsSchema = new Schema({
     type: Number,
     default: 0,
   },
+  totalPoints: {
+    type: Number,
+    default: 0,
+  },
   pointsHistory: [PointsHistorySchema],
   createdAt: {
     type: Date,

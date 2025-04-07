@@ -80,8 +80,8 @@ export async function POST(request: NextRequest) {
     if (!userPoints) {
       userPoints = new UserPoints({
         address: address.toLowerCase(),
-        currentPoints: points,
-        highestPoints: points > 0 ? points : 0,
+        currentPoints: points,  // Set initial current points
+        highestPoints: points,  // Initial highest is same as current
         pointsHistory: [{
           points,
           reason,
@@ -90,13 +90,12 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // Update existing user
-      const newTotalPoints = userPoints.currentPoints + points;
+      // Set current points to the new points value (not cumulative)
+      userPoints.currentPoints = points;
       
-      userPoints.currentPoints = newTotalPoints;
-      
-      // Update highest points if the new total is higher
-      if (newTotalPoints > userPoints.highestPoints) {
-        userPoints.highestPoints = newTotalPoints;
+      // Update highest points only if the new points are higher
+      if (points > userPoints.highestPoints) {
+        userPoints.highestPoints = points;
       }
       
       // Add to points history

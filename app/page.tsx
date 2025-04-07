@@ -1,19 +1,12 @@
 "use client";
-import Image from "next/image";
-import { useState } from "react";
-import Link from "next/link";
 import '@rainbow-me/rainbowkit/styles.css';
 import {
   getDefaultConfig,
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
-import { useWriteContract, WagmiProvider } from 'wagmi';
+import {  WagmiProvider } from 'wagmi';
 import {
-  mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  base,
+
   sepolia,
 } from 'wagmi/chains';
 import {
@@ -29,14 +22,12 @@ const config = getDefaultConfig({
 });
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
-import { useAccount } from 'wagmi';
 import Comp from "./Comp";
 
 export default function Home() {
 
   const queryClient = new QueryClient();
 
-  const [isStaked, setIsStaked] = useState(false);
 
   
 
