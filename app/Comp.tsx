@@ -37,6 +37,8 @@ const Comp = () => {
         }
         
         try {
+
+            localStorage.setItem("address", address)
             // Call the contract using Wagmi
             writeContract({
                 address: contractAddress,
