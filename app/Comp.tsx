@@ -8,7 +8,7 @@ const Comp = () => {
     const [isStaked, setIsStaked] = useState(false)
     const { address } = useAccount()
     
-    const contractAddress = "0x26D83be2E1aB00168cc859595296C87d04221a82"
+    const contractAddress = "0x1E86eD75Fd3a8faaf2FB6e51FCF86A0784da1606"
     
     // Use Wagmi's hooks for contract interaction
     const { data: hash, isPending, error, writeContract } = useWriteContract()
