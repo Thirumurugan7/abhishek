@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import abi from "./abi.json"
 
@@ -26,9 +25,6 @@ const Comp = () => {
         }
     }, [isConfirmed])
     
-
-    // Function to fetch user points
-
     const handleStake = async () => {
         if (!address) {
             console.log("Please connect your wallet")
@@ -37,7 +33,6 @@ const Comp = () => {
         }
         
         try {
-
             localStorage.setItem("address", address)
             // Call the contract using Wagmi
             writeContract({
@@ -46,9 +41,6 @@ const Comp = () => {
                 functionName: 'stake',
                 args: [1], // Pass the arguments as needed
             })
-            
-            // Update points after successful staking
-    
         } catch (err) {
             console.error("Transaction failed:", err)
             alert("Transaction failed. See console for details.")
@@ -58,52 +50,51 @@ const Comp = () => {
     }
 
     return (
-        <div className="flex-1 p-6 flex flex-col items-center justify-center text-center">
-            {!isStaked ? (
-                <>
-                    <Image
-                        src="/next.svg"
-                        alt="Game logo"
-                        width={120}
-                        height={120}
-                        className="mb-6 dark:invert"
-                        priority
-                    />
-                    <h2 className="text-xl font-bold mb-3">Ready to Play?</h2>
-                    <p className="text-gray-600 dark:text-gray-300 mb-8">
-                        Stake your tokens to join the adventure and earn amazing rewards!
-                    </p>
-                    <button
-                        onClick={handleStake}
-                        disabled={isPending || isConfirming}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {isPending || isConfirming ? 'Processing...' : 'Stake Now'}
-                    </button>
-                    {error && (
-                        <p className="text-red-500 mt-2">
-                            Error: {error.message}
-                        </p>
-                    )}
-                </>
-            ) : (
-                <>
-                    <div className="mb-6 bg-green-100 dark:bg-green-900 p-4 rounded-lg">
-                        <p className="text-green-700 dark:text-green-300 font-medium">
-                            You&apos;re successfully staked!
-                        </p>
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-300 mb-8">
-                        Your adventure awaits. Click below to start playing!
-                    </p>
-                    <Link
-                        href="/game"
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full transition-colors"
-                    >
-                        Start Game
-                    </Link>
-                </>
-            )}
+        <div className="flex flex-col items-center justify-center w-full h-full py-8 px-4 rounded-3xl" style={{
+            background: 'radial-gradient(circle at center, #CE56C0 0%, #CE56C0 30%, #DC0070 70%, #DC0070 100%)',
+            minHeight: '600px'
+        }}>
+            {/* RPS CORE Logo */}
+            <div className="text-center mb-8 mt-0">
+              <Image src="/logo.png" alt="RPS CORE" width={150} height={150} />
+            </div>
+            
+            {/* Tagline */}
+            <div className="text-center mb-auto">
+                <p style={{ 
+                    fontFamily: "'Jersey 25', sans-serif",
+                    fontSize: '30px',
+                    fontWeight: 400,
+                    lineHeight: '100%',
+                    letterSpacing: '0',
+                    color: '#DDFBFF',
+                    textAlign: 'center'
+                }}>
+                    Play RPS, Lock ASTR, Win<br />GAME Tokens!
+                </p>
+            </div>
+            
+            {/* Spacer to push button to bottom */}
+            <div className="flex-grow"></div>
+            
+            {/* Connect Wallet Button (Bottom) */}
+            <button
+                onClick={handleStake}
+                disabled={isPending || isConfirming}
+                className="flex justify-center items-center gap-2 text-black text-xl font-bold shadow-lg transition-all hover:shadow-xl mt-8 mb-4"
+                style={{ 
+                    fontFamily: 'Arial, sans-serif',
+                    background: 'linear-gradient(90deg, #F7CBBF 0%, #CDAFFA 100%)',
+                    color: '#000000',
+                    border: '1.5px solid #FFF',
+                    borderRadius: '20px',
+                    width: '264px',
+                    height: '66px',
+                    padding: '8px 16px 8px 13px'
+                }}
+            >
+                {isPending || isConfirming ? 'Processing...' : 'Connect Wallet'}
+            </button>
         </div>
     )
 }
