@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/app/lib/mongodb';
 import UserPoints from '@/app/models/UserPoints';
 import { corsMiddleware } from '../../lib/cors';
-
 export async function GET(req: NextRequest) {
   return corsMiddleware(req, async (req) => {
     try {

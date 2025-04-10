@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 import { connectToDatabase } from '@/app/lib/mongodb';
 import { corsMiddleware } from '../../lib/cors';
-
 // Define the Claims schema
 const ClaimsSchema = new mongoose.Schema({
   address: { type: String, required: true, unique: true },
