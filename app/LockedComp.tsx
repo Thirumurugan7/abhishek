@@ -79,7 +79,7 @@ const LockedComp = () => {
             console.log(`ASTR Balance for ${addressToCheck}: ${balance}`);
             if(balance){
                 BigInt(balance.toString())
-                const balanceInEth = formatEther(BigInt(balance.toString()))
+                const balanceInEth = (balance.toString())
                 setBalance(Number(balanceInEth))
             }
             return balance;

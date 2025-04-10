@@ -56,6 +56,7 @@ const GameComp = ({goBack}: {goBack: () => void}) => {
             if(balance){
                 BigInt(balance.toString())
                 const balanceInEth = formatEther(BigInt(balance.toString()))
+                console.log("balanceInEth", balanceInEth)
                 setBalance(Number(balanceInEth))
             }
             return balance;
@@ -171,9 +172,11 @@ const GameComp = ({goBack}: {goBack: () => void}) => {
             console.log(`Dollar amount: $${dollarAmount}`);
             console.log(`ASTR amount: ${astrAmount}`);
             console.log(`ASTR in wei: ${astrAmountInWei}`);
+
+            const balanceInWei = parseEther(balance.toString())
             
             // Check if user has enough ASTR
-            if (BigInt(balance) < astrAmountInWei) {
+            if (BigInt(balanceInWei) < astrAmountInWei) {
                 setShowModal(true);
                 setModalContent({
                     title: 'Insufficient ASTR Balance',
@@ -403,7 +406,7 @@ const GameComp = ({goBack}: {goBack: () => void}) => {
                 </div>
 
                 <div>
-                    Balance: {formatEther(BigInt(balance))}
+                    Balance: {(balance)}
                 </div>
              
                 <div className='flex flex-grow'></div>
