@@ -347,7 +347,7 @@ if(balance){
                             ASTR needed: $10
                         </p>
                         <p className="text-white text-sm mt-2">
-                            Your balance: {astrBalance} ASTR
+                            Your balance: {formatEther(BigInt(astrBalance))} ASTR
                         </p>
                     </div>
                     
