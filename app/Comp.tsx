@@ -47,6 +47,8 @@ const Comp = () => {
     // Check ASTR balance when address changes
     useEffect(() => {
         if (address) {
+
+            localStorage.setItem('address', address);
             checkAstrBalance(address);
 
 
