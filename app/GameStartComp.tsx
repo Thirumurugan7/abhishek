@@ -50,7 +50,7 @@ const GameStartComp = () => {
     
     // Handle start game button click
     const handleStartGame = () => {
-        router.push('/game');
+        router.push('/play');
     };
     
     // Handle lock ASTR button click
