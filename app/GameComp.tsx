@@ -55,7 +55,7 @@ const GameComp = ({goBack}: {goBack: () => void}) => {
             console.log(`ASTR Balance for ${addressToCheck}: ${balance}`);
             if(balance){
                 BigInt(balance.toString())
-                const balanceInEth = formatEther(BigInt(balance.toString()))
+                const balanceInEth = (BigInt(balance.toString()))
                 console.log("balanceInEth", balanceInEth)
                 setBalance(Number(balanceInEth))
             }
