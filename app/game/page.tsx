@@ -25,7 +25,8 @@ const GamePage = () => {
     const [showModal, setShowModal] = useState(false);
     const [modalContent, setModalContent] = useState({
         title: '',
-        message: ''
+        message: '',
+        isClaimModal: false
     });
     
     // Add these state variables
@@ -130,7 +131,8 @@ const GamePage = () => {
             setShowModal(true);
             setModalContent({
                 title: 'Wallet Not Connected',
-                message: 'Please connect your wallet to continue.'
+                message: 'Please connect your wallet to continue.',
+                isClaimModal: true
             });
             return;
         }
@@ -140,7 +142,8 @@ const GamePage = () => {
             setShowModal(true);
             setModalContent({
                 title: 'Claiming',
-                message: 'Processing your claim...'
+                message: 'Processing your claim...',
+                isClaimModal: true
             });
             
             // Call claim function on contract
@@ -228,7 +231,8 @@ const GamePage = () => {
             // Show success modal
             setModalContent({
                 title: 'Success!',
-                message: `You have successfully claimed and earned 10 points! Total claims: ${data.claimCount}`
+                message: `You have successfully claimed and earned 10 points! Total claims: ${data.claimCount}`,
+                isClaimModal: true
             });
 
 
@@ -241,13 +245,14 @@ const GamePage = () => {
         } catch (error) {
             console.error("Error claiming:", error);
             
-            // Show error modal
+            // Show error modal with isClaimModal flag
             setShowModal(true);
             setModalContent({
                 title: 'Error',
                 message: error instanceof Error 
-                    ? `Error: ${error.message}` 
-                    : 'There was an error processing your claim. Please try again.'
+                    ? `Error claiming: ${error.message}` 
+                    : 'There was an error processing your claim. Please try again.',
+                isClaimModal: true
             });
         }
     };
@@ -258,7 +263,8 @@ const GamePage = () => {
             setShowModal(true);
             setModalContent({
                 title: 'Wallet Not Connected',
-                message: 'Please connect your wallet to continue.'
+                message: 'Please connect your wallet to continue.',
+                isClaimModal: false
             });
             return;
         }
@@ -272,7 +278,8 @@ const GamePage = () => {
                 setShowModal(true);
                 setModalContent({
                     title: 'Minimum Amount Required',
-                    message: `Please enter at least $${MIN_DOLLAR_AMOUNT} worth of ASTR to continue.`
+                    message: `Please enter at least $${MIN_DOLLAR_AMOUNT} worth of ASTR to continue.`,
+                    isClaimModal: false
                 });
                 return;
             }
@@ -290,7 +297,8 @@ const GamePage = () => {
                 setShowModal(true);
                 setModalContent({
                     title: 'Insufficient ASTR Balance',
-                    message: `You need ${astrAmount.toFixed(2)} ASTR (${dollarAmount.toFixed(2)}$) but you only have ${formatEther(BigInt(balance))} ASTR.`
+                    message: `You need ${astrAmount.toFixed(2)} ASTR (${dollarAmount.toFixed(2)}$) but you only have ${formatEther(BigInt(balance))} ASTR.`,
+                    isClaimModal: false
                 });
                 return;
             }
@@ -321,7 +329,8 @@ const GamePage = () => {
                 // Show approving modal
                 setModalContent({
                     title: 'Approving ASTR',
-                    message: 'Please confirm the transaction in your wallet to approve ASTR...'
+                    message: 'Please confirm the transaction in your wallet to approve ASTR...',
+                    isClaimModal: false
                 });
 
                 // Call approve
@@ -357,7 +366,8 @@ const GamePage = () => {
             // Show staking modal
             setModalContent({
                 title: 'Staking ASTR',
-                message: `Please confirm the transaction in your wallet to stake ${astrAmount.toFixed(2)} ASTR...`
+                message: `Please confirm the transaction in your wallet to stake ${astrAmount.toFixed(2)} ASTR...`,
+                isClaimModal: false
             });
 
             // Call stake function
@@ -414,7 +424,8 @@ const GamePage = () => {
                     // Show success modal
                     setModalContent({
                         title: 'Success!',
-                        message: `You have successfully locked ${astrAmount.toFixed(2)} ASTR and earned points!`
+                        message: `You have successfully locked ${astrAmount.toFixed(2)} ASTR and earned points!`,
+                        isClaimModal: false 
                     });
                     
                     // Redirect to game start after a delay
@@ -443,7 +454,8 @@ const GamePage = () => {
                 title: 'Error',
                 message: error instanceof Error 
                     ? `Error: ${error.message}` 
-                    : 'There was an error locking your ASTR. Please try again.'
+                    : 'There was an error locking your ASTR. Please try again.',
+                isClaimModal: false
             });
         }
     };
@@ -456,7 +468,8 @@ const GamePage = () => {
             setShowModal(true);
             setModalContent({
                 title: 'Wallet Not Connected',
-                message: 'Please connect your wallet to continue.'
+                message: 'Please connect your wallet to continue.',
+                isClaimModal: false
             });
             return;
         }
@@ -477,7 +490,8 @@ const GamePage = () => {
                 setShowModal(true);
                 setModalContent({
                     title: 'Processing',
-                    message: 'Withdrawing your staked ASTR...'
+                    message: 'Withdrawing your staked ASTR...',
+                    isClaimModal: false
                 });
 
                 // Get staked balance
@@ -521,13 +535,15 @@ const GamePage = () => {
 
                 setModalContent({
                     title: 'Success!',
-                    message: `Successfully withdrew ${formatEther(stakedBalance)} ASTR`
+                    message: `Successfully withdrew ${formatEther(stakedBalance)} ASTR`,
+                    isClaimModal: false
                 });
             } else {
                 setShowModal(true);
                 setModalContent({
                     title: 'Insufficient Points',
-                    message: 'You need at least 1000 points to unlock ASTR.'
+                    message: 'You need at least 1000 points to unlock ASTR.',
+                    isClaimModal: false
                 });
             }
         } catch (error) {
@@ -539,7 +555,8 @@ const GamePage = () => {
                 title: 'Error',
                 message: error instanceof Error 
                     ? `Error: ${error.message}` 
-                    : 'There was an error unlocking your ASTR. Please try again.'
+                    : 'There was an error unlocking your ASTR. Please try again.',
+                isClaimModal: false
             });
         }
     };
@@ -738,21 +755,25 @@ Start Game                        </button>
                         </p>
                         
                         <div className="flex flex-col gap-3">
-                            <button 
-                                onClick={() => window.open('https://app.kyo.finance/swap', '_blank')}
-                                className="w-full flex justify-center items-center text-black text-base font-bold shadow-lg"
-                                style={{ 
-                                    fontFamily: 'Arial, sans-serif',
-                                    background: 'linear-gradient(90deg, #F7CBBF 0%, #CDAFFA 100%)',
-                                    color: '#000000',
-                                    border: '1.5px solid #FFF',
-                                    borderRadius: '20px',
-                                    height: '50px',
-                                    padding: '8px 16px'
-                                }}
-                            >
-                                Get ASTR
-                            </button>
+{
+    !modalContent.isClaimModal && (
+        <button 
+            onClick={() => window.open('https://app.kyo.finance/swap', '_blank')}
+            className="w-full flex justify-center items-center text-black text-base font-bold shadow-lg"
+            style={{ 
+                fontFamily: 'Arial, sans-serif',
+                background: 'linear-gradient(90deg, #F7CBBF 0%, #CDAFFA 100%)',
+                color: '#000000',
+                border: '1.5px solid #FFF',
+                borderRadius: '20px',
+                height: '50px',
+                padding: '8px 16px'
+            }}
+        >
+            Get ASTR
+        </button>
+    )
+}
                             <button 
                                 onClick={() => setShowModal(false)}
                                 className="w-full flex justify-center items-center text-black text-base font-bold shadow-lg"
