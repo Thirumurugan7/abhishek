@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export function corsMiddleware(req: NextRequest, handler: (req: NextRequest) => Promise<NextResponse>) {
   // Check the origin
-  const origin = req.headers.get('origin') || '*';
   
   // Handle preflight OPTIONS request
   if (req.method === 'OPTIONS') {
