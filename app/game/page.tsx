@@ -498,20 +498,28 @@ const GamePage = () => {
                 const stakedBalance = await publicClient?.readContract({
                     address: '0x15c416e97Ab1f7B60afA2558B4Acf92a33A886FA',
                     abi: [{
-                        "inputs": [],
-                        "name": "stakingTokenBalance",
-                        "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+                        "inputs": [{"internalType": "address", "name": "", "type": "address"}],
+                        "name": "stakers",
+                        "outputs": [
+                            {"internalType": "uint128", "name": "timeOfLastUpdate", "type": "uint128"},
+                            {"internalType": "uint64", "name": "conditionIdOflastUpdate", "type": "uint64"},
+                            {"internalType": "uint256", "name": "amountStaked", "type": "uint256"},
+                            {"internalType": "uint256", "name": "unclaimedRewards", "type": "uint256"}
+                        ],
                         "stateMutability": "view",
                         "type": "function"
                     }],
-                    functionName: 'stakingTokenBalance',
-                    args: []
+                    functionName: 'stakers',
+                    args: [address as `0x${string}`]
                 });
 
+                console.log(stakedBalance);
+                console.log(stakedBalance?.[2]);
                 if (!stakedBalance) {
                     throw new Error('Could not get staked balance');
                 }
 
+   
                 // Call withdraw function
                 const hash = await writeContractAsync({
                     address: '0x15c416e97Ab1f7B60afA2558B4Acf92a33A886FA',
@@ -523,7 +531,7 @@ const GamePage = () => {
                         "type": "function"
                     }],
                     functionName: 'withdraw',
-                    args: [stakedBalance]
+                    args: [stakedBalance[2]]
                 });
 
                 if (!hash) {
@@ -535,8 +543,8 @@ const GamePage = () => {
 
                 setModalContent({
                     title: 'Success!',
-                    message: `Successfully withdrew ${formatEther(stakedBalance)} ASTR`,
-                    isClaimModal: false
+                    message: `Successfully withdrew ${formatEther(stakedBalance[2] as bigint)} ASTR`,
+                    isClaimModal: true
                 });
             } else {
                 setShowModal(true);
@@ -739,7 +747,10 @@ Start Game                        </button>
             
             {/* Modal for transaction status */}
             {showModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed inset-0 flex items-center justify-center z-50" style={{
+                    background: 'radial-gradient(50% 50% at 50% 50%, #CE566E 0%, rgba(255, 52, 143, 0.79) 78.85%)',
+                    boxShadow: '0px 4px 89.4px 0px rgba(0, 0, 0, 0.25)'
+                }}>
                     <div className="bg-white p-6 rounded-3xl max-w-xs w-full shadow-lg" style={{
                         background: 'radial-gradient(circle at center, #CE56C0 0%, #CE56C0 30%, #DC0070 70%, #DC0070 100%)',
                     }}>
@@ -755,7 +766,7 @@ Start Game                        </button>
                         </p>
                         
                         <div className="flex flex-col gap-3">
-{
+{/* {
     !modalContent.isClaimModal && (
         <button 
             onClick={() => window.open('https://app.kyo.finance/swap', '_blank')}
@@ -773,7 +784,7 @@ Start Game                        </button>
             Get ASTR
         </button>
     )
-}
+} */}
                             <button 
                                 onClick={() => setShowModal(false)}
                                 className="w-full flex justify-center items-center text-black text-base font-bold shadow-lg"
@@ -796,14 +807,17 @@ Start Game                        </button>
 
             {/* Confirmation Modal for Unlock ASTR */}
 {showConfirmModal && (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50" style={{
+        background: 'radial-gradient(50% 50% at 50% 50%, #CE566E 0%, rgba(255, 52, 143, 0.79) 78.85%)',
+        boxShadow: '0px 4px 89.4px 0px rgba(0, 0, 0, 0.25)'
+    }}>
         <div className="bg-white p-6 rounded-3xl max-w-xs w-full shadow-lg" style={{
-            background: 'white',
+            background: 'radial-gradient(circle at center, #CE56C0 0%, #CE56C0 30%, #DC0070 70%, #DC0070 100%)',
         }}>
             <div className="flex justify-end">
                 <button 
                     onClick={() => setShowConfirmModal(false)}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-white hover:text-gray-200"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -811,11 +825,11 @@ Start Game                        </button>
                 </button>
             </div>
             
-            <h3 className="text-xl font-bold mb-4 text-center text-black" style={{ 
+            <h3 className="text-xl font-bold mb-4 text-center text-white" style={{ 
                 fontFamily: "'Jersey 25', sans-serif",
             }}>ARE YOU SURE ?</h3>
             
-            <p className="mb-6 text-center text-gray-600" style={{ 
+            <p className="mb-6 text-center text-white" style={{ 
                 fontFamily: "'Jersey 25', sans-serif",
                 fontSize: '18px',
             }}>
@@ -825,11 +839,12 @@ Start Game                        </button>
             <div className="flex justify-center">
                 <button 
                     onClick={confirmUnlockASTR}
-                    className="w-full flex justify-center items-center text-white text-base font-bold shadow-lg"
+                    className="w-full flex justify-center items-center text-black text-base font-bold shadow-lg"
                     style={{ 
                         fontFamily: 'Arial, sans-serif',
-                        background: '#CD9B5A',
-                        border: 'none',
+                        background: 'linear-gradient(90deg, #F7CBBF 0%, #CDAFFA 100%)',
+                        color: '#000000',
+                        border: '1.5px solid #FFF',
                         borderRadius: '20px',
                         height: '50px',
                         padding: '8px 16px'
