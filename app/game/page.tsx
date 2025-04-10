@@ -550,7 +550,7 @@ const GamePage = () => {
                 setShowModal(true);
                 setModalContent({
                     title: 'Insufficient Points',
-                    message: 'You need more than 1000 points to unlock ASTR.',
+                    message: 'You need more than 1000 points to unlock ASTR. Please complete rounds and play more to unlock',
                     isClaimModal: false
                 });
             }
