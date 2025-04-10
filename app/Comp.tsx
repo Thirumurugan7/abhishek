@@ -405,7 +405,7 @@ if(balance){
                             </p>
                             
                             <div className="flex flex-col gap-3">
-                                <button 
+                                {/* <button 
                                     onClick={handleGetAstr}
                                     className="w-full flex justify-center items-center text-black text-base font-bold shadow-lg"
                                     style={{ 
@@ -419,7 +419,7 @@ if(balance){
                                     }}
                                 >
                                     Get ASTR
-                                </button>
+                                </button> */}
                                 
                                 <button 
                                     onClick={() => setShowModal(false)}

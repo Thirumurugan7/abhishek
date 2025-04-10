@@ -499,7 +499,7 @@ const GameComp = ({goBack}: {goBack: () => void}) => {
                         </p>
                         
                         <div className="flex flex-col gap-3">
-                            <button 
+                            {/* <button 
                                 onClick={() => window.open('https://app.kyo.finance/swap', '_blank')}
                                 className="w-full flex justify-center items-center text-black text-base font-bold shadow-lg"
                                 style={{ 
@@ -513,7 +513,7 @@ const GameComp = ({goBack}: {goBack: () => void}) => {
                                 }}
                             >
                                 Get ASTR
-                            </button>
+                            </button> */}
                             <button 
                                 onClick={() => setShowModal(false)}
                                 className="w-full flex justify-center items-center text-black text-base font-bold shadow-lg"
