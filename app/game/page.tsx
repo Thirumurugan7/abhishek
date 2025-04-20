@@ -148,7 +148,7 @@ const GamePage = () => {
             
             // Call claim function on contract
             const hash = await writeContractAsync({
-                address: '0x16c70B621Ba8A14c13804B2318a0BcBf0D21Ec98',
+                address: '0x0F733EF4fB81ccEE6C091aB20175811ed220e07B',
                 abi: [{
                     "inputs": [
                         {"internalType": "address", "name": "_receiver", "type": "address"},
@@ -166,7 +166,7 @@ const GamePage = () => {
                     ],
                     "name": "claim",
                     "outputs": [],
-                    "stateMutability": "nonpayable",
+                    "stateMutability": "payable",
                     "type": "function"
                 }],
                 functionName: 'claim',
@@ -174,7 +174,7 @@ const GamePage = () => {
                     address, // receiver
                     BigInt(10000000000000000000), // quantity 
                     '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE', // currency address (zero for native)
-                    BigInt(500000000000), // price per token
+                    BigInt(131000000000), // price per token
                     [
                         [], // bytes32[]
                         BigInt(0), // uint256
@@ -182,7 +182,8 @@ const GamePage = () => {
                         "0x0000000000000000000000000000000000000000" // address
                     ],
                     '0x' // empty data
-                ]
+                ], 
+                value: BigInt(1310000000000) as any // 0.00000131 eth in wei
             });
 
             if (!hash) {
