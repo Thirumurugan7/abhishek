@@ -854,8 +854,14 @@ try {
     const unstakeBtn = document.getElementById('unstake-btn');
     if (unstakeBtn) {
       unstakeBtn.addEventListener('click', function() {
-        console.log("Unstake button clicked");
-        unstakeTokens();
+        // Only proceed if button is not disabled
+        if (!(unstakeBtn as HTMLButtonElement).disabled) {
+          console.log("Unstake button clicked");
+          unstakeTokens();
+        } else {
+          // Show alert if trying to unstake before playing enough games
+          alert(`You need to play at least ${gameState.gamesRequiredToUnstake} games to unstake. You have played ${gameState.gamesPlayed} games.`);
+        }
       });
     }
   }
@@ -869,26 +875,39 @@ try {
       
       console.log("Claims data:", data);
       
-      if (data && data.claimsData) {
-        // Update the games played counter
-        const playCounter = document.getElementById('play-counter');
-        if (playCounter) {
-          playCounter.textContent = `GAMES PLAYED: ${data.claimsData.gamesPlayed || 0}/${gameState.gamesRequiredToUnstake}`;
-        }
-        
-        // Update game state
-        setGameState(prev => ({
-          ...prev,
-          gamesPlayed: data.claimsData.gamesPlayed || 0
-        }));
-        
-        // If we've reached the required games, enable unstake button
-        if ((data.claimsData.gamesPlayed || 0) >= gameState.gamesRequiredToUnstake) {
-          const unstakeBtn = document.getElementById('unstake-btn');
-          if (unstakeBtn) {
-            (unstakeBtn as HTMLButtonElement).disabled = false;
-            unstakeBtn.style.display = 'block';
-          }
+      // Get games played from API or default to 0
+      const gamesPlayed = data?.claimsData?.gamesPlayed || 0;
+      
+      // Update the games played counter
+      const playCounter = document.getElementById('play-counter');
+      if (playCounter) {
+        playCounter.textContent = `GAMES PLAYED: ${gamesPlayed}/${gameState.gamesRequiredToUnstake}`;
+      }
+      
+      // Update game state
+      setGameState(prev => ({
+        ...prev,
+        gamesPlayed: gamesPlayed
+      }));
+      
+      // Check if enough games have been played to enable unstake
+      const unstakeBtn = document.getElementById('unstake-btn');
+      if (unstakeBtn) {
+        if (gamesPlayed >= gameState.gamesRequiredToUnstake) {
+          // Enable unstake button if enough games played
+          unstakeBtn.classList.remove('btn-disabled');
+          (unstakeBtn as HTMLButtonElement).disabled = false;
+        } else {
+          // Disable unstake button if not enough games played
+          unstakeBtn.classList.add('btn-disabled');
+          (unstakeBtn as HTMLButtonElement).disabled = true;
+          
+          // Add click event to show alert when clicked while disabled
+          unstakeBtn.onclick = function() {
+            if (gamesPlayed < gameState.gamesRequiredToUnstake) {
+              alert(`You need to play at least ${gameState.gamesRequiredToUnstake} games to unstake. You have played ${gamesPlayed} games.`);
+            }
+          };
         }
       }
     } catch (error) {
