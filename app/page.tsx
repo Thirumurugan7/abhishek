@@ -47,6 +47,7 @@ export default function PlayPage() {
   useEffect(() => {
     if (isConnected && address) {
       fetchUserPoints(address);
+      fetchClaimsData(address);
 
       console.log("address:", address);
 
@@ -618,22 +619,42 @@ try {
     // Your existing implementation...
   }
   
-  // Modified play game function to update points
+  // Modified play game function to update points and claims
   const playGame = () => {
-    // Simulate playing a game
+    if (!address) return;
+    
+    // Increment games played locally
+    const newGamesPlayed = gameState.gamesPlayed + 1;
+    
     setGameState(prev => ({
       ...prev,
-      gamesPlayed: prev.gamesPlayed + 1
+      gamesPlayed: newGamesPlayed
     }));
     
     // Update play counter
     const playCounter = document.getElementById('play-counter');
     if (playCounter) {
-      playCounter.textContent = `GAMES PLAYED: ${gameState.gamesPlayed + 1}/${gameState.gamesRequiredToUnstake}`;
+      playCounter.textContent = `GAMES PLAYED: ${newGamesPlayed}/${gameState.gamesRequiredToUnstake}`;
+    }
+    
+    // Update claims data in API
+    try {
+      fetch('/api/claims', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          address: address,
+          gamesPlayed: newGamesPlayed
+        }),
+      });
+    } catch (error) {
+      console.error('Error updating claims data:', error);
     }
     
     // If we've reached the required games, enable unstake button
-    if (gameState.gamesPlayed + 1 >= gameState.gamesRequiredToUnstake) {
+    if (newGamesPlayed >= gameState.gamesRequiredToUnstake) {
       const unstakeBtn = document.getElementById('unstake-btn');
       if (unstakeBtn) {
         (unstakeBtn as HTMLButtonElement).disabled = false;
@@ -839,6 +860,42 @@ try {
     }
   }
 
+  // Add a function to fetch claims data
+  const fetchClaimsData = async (walletAddress: string) => {
+    try {
+      // Use the claims API endpoint
+      const response = await fetch(`/api/claims?address=${walletAddress}`);
+      const data = await response.json();
+      
+      console.log("Claims data:", data);
+      
+      if (data && data.claimsData) {
+        // Update the games played counter
+        const playCounter = document.getElementById('play-counter');
+        if (playCounter) {
+          playCounter.textContent = `GAMES PLAYED: ${data.claimsData.gamesPlayed || 0}/${gameState.gamesRequiredToUnstake}`;
+        }
+        
+        // Update game state
+        setGameState(prev => ({
+          ...prev,
+          gamesPlayed: data.claimsData.gamesPlayed || 0
+        }));
+        
+        // If we've reached the required games, enable unstake button
+        if ((data.claimsData.gamesPlayed || 0) >= gameState.gamesRequiredToUnstake) {
+          const unstakeBtn = document.getElementById('unstake-btn');
+          if (unstakeBtn) {
+            (unstakeBtn as HTMLButtonElement).disabled = false;
+            unstakeBtn.style.display = 'block';
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching claims data:', error);
+    }
+  };
+
   return (
     <div className="crt">
       {/* Hidden RainbowKit connect button */}
@@ -921,10 +978,10 @@ try {
         
         <input type="number" id="stake-input" className="stake-input" placeholder="ENTER STAKE AMOUNT" min="10" step="1" />
         
-        {/* <div className="play-counter" id="play-counter">
+        <div className="play-counter" id="play-counter">
           GAMES PLAYED: {gameState.gamesPlayed}/{gameState.gamesRequiredToUnstake}
         </div>
-         */}
+        
         <div className="stake-error" id="stake-error"></div>
         
         <button id="confirm-stake-btn" className="stake-btn" disabled={isPending}>
