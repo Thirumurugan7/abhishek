@@ -122,10 +122,15 @@ export default function PlayPage() {
         startGameBtn.classList.remove('btn-disabled');
         (startGameBtn as HTMLButtonElement).disabled = false;
         
-        // Also enable unstake button if points are >= 1000
+        // For unstake button, check both points AND games played
         if (unstakeBtn) {
-          unstakeBtn.classList.remove('btn-disabled');
-          (unstakeBtn as HTMLButtonElement).disabled = false;
+          if (gameState.gamesPlayed >= gameState.gamesRequiredToUnstake) {
+            unstakeBtn.classList.remove('btn-disabled');
+            (unstakeBtn as HTMLButtonElement).disabled = false;
+          } else {
+            unstakeBtn.classList.add('btn-disabled');
+            (unstakeBtn as HTMLButtonElement).disabled = true;
+          }
         }
         
         // Update info box to show game is unlocked
@@ -895,21 +900,15 @@ try {
       // Check if enough games have been played to enable unstake
       const unstakeBtn = document.getElementById('unstake-btn');
       if (unstakeBtn) {
-        if (gamesPlayed >= gameState.gamesRequiredToUnstake) {
-          // Enable unstake button if enough games played
+        // Check BOTH games played AND points
+        if (gamesPlayed >= gameState.gamesRequiredToUnstake && gameState.points >= 1000) {
+          // Enable unstake button if both conditions are met
           unstakeBtn.classList.remove('btn-disabled');
           (unstakeBtn as HTMLButtonElement).disabled = false;
         } else {
-          // Disable unstake button if not enough games played
+          // Disable unstake button if either condition is not met
           unstakeBtn.classList.add('btn-disabled');
           (unstakeBtn as HTMLButtonElement).disabled = true;
-          
-          // Add click event to show alert when clicked while disabled
-          unstakeBtn.onclick = function() {
-            if (gamesPlayed < gameState.gamesRequiredToUnstake) {
-              alert(`You need to play at least ${gameState.gamesRequiredToUnstake} games to unstake. You have played ${gamesPlayed} games.`);
-            }
-          };
         }
       }
     } catch (error) {
