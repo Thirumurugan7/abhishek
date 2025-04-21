@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/app/lib/mongodb';
 import UserPoints from '@/app/models/UserPoints';
 import { corsMiddleware } from '../../lib/cors';
+
+// Simple in-memory storage for demo purposes
+// In a real app, you'd use a database
+// const userPoints = new Map<string, number>();
+
 export async function GET(req: NextRequest) {
   return corsMiddleware(req, async (req) => {
     try {
