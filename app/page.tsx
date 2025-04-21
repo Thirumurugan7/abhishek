@@ -541,7 +541,9 @@ try {
       // Update UI
       const stakeSuccess = document.getElementById('stake-success');
       if (stakeSuccess) {
-        stakeSuccess.textContent = `UNSTAKED ${stakedBalance[2]} TOKENS!`;
+        // convert stakedBalance[2] to a ether amount
+        const etherAmount = formatEther(stakedBalance[2]);
+        stakeSuccess.textContent = `UNSTAKED ${etherAmount} ASTR!`;
         stakeSuccess.style.display = 'block';
       }
       
