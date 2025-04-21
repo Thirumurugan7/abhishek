@@ -279,8 +279,13 @@ export default function PlayPage() {
 
     console.log("Allowance:", allowance);
 
+    const allowanceBigInt = BigInt(allowance as bigint);
+    const amountBigInt = BigInt(parseEther(amount.toString()));
 
-    if ((allowance as bigint) < amount) {
+    console.log("allowanceBigInt:", allowanceBigInt);
+    console.log("amountBigInt:", amountBigInt);
+
+    if (allowanceBigInt < amountBigInt) {
       console.log("Approval required");
       
       // Show approving modal
@@ -351,8 +356,7 @@ console.log("Stake transaction confirmed");
 
     
       
-      // Add static effect
-      addStatic();
+
       
       // Update game state
       setGameState(prev => ({
@@ -373,7 +377,7 @@ console.log("Stake transaction confirmed");
           },
           body: JSON.stringify({
             address: addresss,
-            points: gameState.points * 100,
+            points: amount * 100,
             reason: 'Staking tokens'
           }),
         });
