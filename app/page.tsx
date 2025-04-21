@@ -377,7 +377,7 @@ console.log("Stake transaction confirmed");
           },
           body: JSON.stringify({
             address: addresss,
-            points: amount * 100,
+            points: amount * 10,
             reason: 'Staking tokens'
           }),
         });
