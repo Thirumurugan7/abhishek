@@ -113,12 +113,19 @@ export default function PlayPage() {
   // Function to check if points meet the threshold
   const checkPointsThreshold = (points: number) => {
     const startGameBtn = document.getElementById('start-game-btn');
+    const unstakeBtn = document.getElementById('unstake-btn');
     const infoBox = document.getElementById('info-box-text');
     
     if (startGameBtn) {
       if (points >= 1000) {
         startGameBtn.classList.remove('btn-disabled');
         (startGameBtn as HTMLButtonElement).disabled = false;
+        
+        // Also enable unstake button if points are >= 1000
+        if (unstakeBtn) {
+          unstakeBtn.classList.remove('btn-disabled');
+          (unstakeBtn as HTMLButtonElement).disabled = false;
+        }
         
         // Update info box to show game is unlocked
         if (infoBox) {
@@ -131,6 +138,12 @@ export default function PlayPage() {
       } else {
         startGameBtn.classList.add('btn-disabled');
         (startGameBtn as HTMLButtonElement).disabled = true;
+        
+        // Disable unstake button if points are < 1000
+        if (unstakeBtn) {
+          unstakeBtn.classList.add('btn-disabled');
+          (unstakeBtn as HTMLButtonElement).disabled = true;
+        }
         
         // Update info box to show points needed
         if (infoBox) {
@@ -442,6 +455,134 @@ console.log("Stake transaction confirmed");
     }
   };
   
+  // Unstake tokens function
+  const unstakeTokens = async () => {
+    console.log("Unstaking tokens");
+    
+    const addresss = localStorage.getItem('address');
+    if (!addresss) return;
+    
+    try {
+      // Show processing state
+      const unstakeBtn = document.getElementById('unstake-btn');
+      if (unstakeBtn) {
+        unstakeBtn.textContent = 'PROCESSING...';
+        (unstakeBtn as HTMLButtonElement).disabled = true;
+      }
+      
+      const stakedBalance = await publicClient?.readContract({
+        address: '0x15c416e97Ab1f7B60afA2558B4Acf92a33A886FA',
+        abi: [{
+            "inputs": [{"internalType": "address", "name": "", "type": "address"}],
+            "name": "stakers",
+            "outputs": [
+                {"internalType": "uint128", "name": "timeOfLastUpdate", "type": "uint128"},
+                {"internalType": "uint64", "name": "conditionIdOflastUpdate", "type": "uint64"},
+                {"internalType": "uint256", "name": "amountStaked", "type": "uint256"},
+                {"internalType": "uint256", "name": "unclaimedRewards", "type": "uint256"}
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }],
+        functionName: 'stakers',
+        args: [addresss as `0x${string}`]
+    });
+
+    console.log(stakedBalance);
+    console.log(stakedBalance?.[2]);
+    if (!stakedBalance) {
+        throw new Error('Could not get staked balance');
+    }
+
+    const hash = await writeContractAsync({
+      address: '0x15c416e97Ab1f7B60afA2558B4Acf92a33A886FA',
+      abi: [{
+          "inputs": [{"internalType": "uint256", "name": "_amount", "type": "uint256"}],
+          "name": "withdraw", 
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+      }],
+      functionName: 'withdraw',
+      args: [stakedBalance[2]]
+  });
+
+
+
+  if (!hash) {
+      throw new Error('Transaction failed');
+  }
+
+  // Wait for transaction confirmation
+   await publicClient?.waitForTransactionReceipt({ hash });
+
+
+try {
+  const response = await fetch('/api/points', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      address: addresss,
+      points: 0,
+      reason: 'Unstaking tokens'
+    }),
+  });  
+
+  const data = await response.json();
+  console.log("Points API response:", data); // Add logging
+} catch (error) {
+  console.error('Error updating points after unstaking:', error);
+}      
+
+      
+      // Update UI
+      const stakeSuccess = document.getElementById('stake-success');
+      if (stakeSuccess) {
+        stakeSuccess.textContent = `UNSTAKED ${stakedBalance[2]} TOKENS!`;
+        stakeSuccess.style.display = 'block';
+      }
+      
+      const stakeBtn = document.getElementById('stake-btn');
+      if (stakeBtn) {
+        stakeBtn.classList.remove('btn-disabled');
+        stakeBtn.textContent = 'STAKE TOKENS';
+        (stakeBtn as HTMLButtonElement).disabled = false;
+      }
+      
+      const startGameBtn = document.getElementById('start-game-btn');
+      if (startGameBtn) {
+        startGameBtn.classList.add('btn-disabled');
+        startGameBtn.textContent = 'START GAME';
+        (startGameBtn as HTMLButtonElement).disabled = true;
+      }
+      
+      // Close modal after delay
+      setTimeout(() => {
+        const stakeModal = document.getElementById('stake-modal');
+        if (stakeModal) stakeModal.style.display = 'none';
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Unstaking error:', error);
+      
+      // Show error
+      const stakeError = document.getElementById('stake-error');
+      if (stakeError) {
+        stakeError.textContent = 'TRANSACTION FAILED. PLEASE TRY AGAIN.';
+        stakeError.style.display = 'block';
+      }
+      
+      // Reset button
+      const unstakeBtn = document.getElementById('unstake-btn');
+      if (unstakeBtn) {
+        unstakeBtn.textContent = 'UNSTAKE TOKENS';
+        (unstakeBtn as HTMLButtonElement).disabled = false;
+      }
+    }
+  };
+  
   function initializeGame() {
     // Create initial snakes
     for (let i = 0; i < 5; i++) {
@@ -687,6 +828,15 @@ console.log("Stake transaction confirmed");
         addStatic();
       });
     }
+
+    // Unstake button
+    const unstakeBtn = document.getElementById('unstake-btn');
+    if (unstakeBtn) {
+      unstakeBtn.addEventListener('click', function() {
+        console.log("Unstake button clicked");
+        unstakeTokens();
+      });
+    }
   }
 
   return (
@@ -725,6 +875,7 @@ console.log("Stake transaction confirmed");
           </button>
           <button id="stake-btn" className="neon-btn btn-disabled" disabled>STAKE TOKENS</button>
           <button id="start-game-btn" className="neon-btn btn-disabled" disabled>START GAME</button>
+          <button id="unstake-btn" className="neon-btn btn-disabled" disabled>UNSTAKE TOKENS</button>
           {/* <button id="scores-btn" className="neon-btn">SCORES</button> */}
         </div>
         
