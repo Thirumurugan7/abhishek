@@ -396,7 +396,7 @@ console.log("Stake transaction confirmed");
           },
           body: JSON.stringify({
             address: addresss,
-            points: amount * 10,
+            points: gameState.points + amount * 10,
             reason: 'Staking tokens'
           }),
         });
