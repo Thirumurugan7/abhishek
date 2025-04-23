@@ -176,6 +176,7 @@ export default function PlayPage() {
   // Update points after game
   const updatePoints = async (newPoints: number) => {
     if (!address) return;
+
     
     try {
       const response = await fetch('/api/points', {
@@ -409,7 +410,9 @@ console.log("Stake transaction confirmed");
           
           setGameState(prev => ({
             ...prev,
-            points: updatedPoints
+            points: updatedPoints,
+            stakedAmount: amount,
+            gameUnlocked: true
           }));
           
           // Update points display
@@ -417,6 +420,29 @@ console.log("Stake transaction confirmed");
           
           // Check if points meet threshold
           checkPointsThreshold(updatedPoints);
+          
+          // Also fetch claims data to ensure everything is in sync
+          if (addresss) {
+            fetchClaimsData(addresss);
+          }
+          
+          // Update UI elements directly
+          const startGameBtn = document.getElementById('start-game-btn');
+          if (startGameBtn && updatedPoints >= 1000) {
+            startGameBtn.classList.remove('btn-disabled');
+            (startGameBtn as HTMLButtonElement).disabled = false;
+            startGameBtn.textContent = 'START GAME';
+          }
+          
+          // Update the info box
+          const infoBox = document.getElementById('info-box-text');
+          if (infoBox && updatedPoints >= 1000) {
+            infoBox.innerHTML = `
+              GAME UNLOCKED!<br />
+              YOUR POINTS: ${updatedPoints}<br />
+              READY TO PLAY
+            `;
+          }
         }
       } catch (error) {
         console.error('Error updating points after staking:', error);

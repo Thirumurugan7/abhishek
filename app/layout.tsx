@@ -1,12 +1,13 @@
 "use client";
 import '@rainbow-me/rainbowkit/styles.css';
 import {
+ 
   getDefaultConfig,
   
   RainbowKitProvider,
   Theme,
 } from '@rainbow-me/rainbowkit';
-import { WagmiProvider } from 'wagmi';
+import {  WagmiProvider } from 'wagmi';
 import {
   soneium
 } from 'wagmi/chains';
@@ -14,6 +15,29 @@ import {
   QueryClientProvider,
   QueryClient,
 } from "@tanstack/react-query";
+
+
+// import {
+//   rainbowWallet,
+//   walletConnectWallet, 
+//   paraSwapWallet,
+
+// } from '@rainbow-me/rainbowkit/wallets';
+
+
+// const connectors = connectorsForWallets(
+//   [
+//     {
+//       groupName: 'Recommended',
+//       wallets: [rainbowWallet, walletConnectWallet],
+//     },
+//   ],
+//   {
+//     appName: 'My RainbowKit App',
+//     projectId: 'YOUR_PROJECT_ID',
+//   }
+// );
+
 
 const config = getDefaultConfig({
   appName: 'My RainbowKit App',
