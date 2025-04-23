@@ -866,18 +866,17 @@ try {
     // Scores button
     const scoresBtn = document.getElementById('scores-btn');
     const scoresContainer = document.getElementById('scores-container');
+    const closeScores = document.getElementById('close-scores');
     
     if (scoresBtn) {
       scoresBtn.addEventListener('click', function() {
-        if (scoresContainer) scoresContainer.style.display = 'block';
+        fetchLeaderboard();
         addStatic();
       });
     }
     
-    // Close scores
-    const closeScoresBtn = document.getElementById('close-scores');
-    if (closeScoresBtn) {
-      closeScoresBtn.addEventListener('click', function() {
+    if (closeScores) {
+      closeScores.addEventListener('click', function() {
         if (scoresContainer) scoresContainer.style.display = 'none';
         addStatic();
       });
@@ -942,6 +941,70 @@ try {
     }
   };
 
+  // Add this function to fetch and display the leaderboard
+  const fetchLeaderboard = async () => {
+    try {
+      // Show loading state
+      const scoresContainer = document.getElementById('scores-container');
+      const scoresList = document.getElementById('scores-list');
+      
+      if (scoresContainer && scoresList) {
+        scoresContainer.style.display = 'block';
+        scoresList.innerHTML = '<div class="text-center my-4">LOADING LEADERBOARD...</div>';
+        
+        // Add static effect
+        addStatic();
+        
+        // Fetch leaderboard data
+        const response = await fetch('/api/points?leaderboard=true');
+        const data = await response.json();
+        
+        if (data && data.leaderboard && data.leaderboard.length > 0) {
+          // Clear loading message
+          scoresList.innerHTML = '';
+          
+          // Populate scores list
+          //ts-ignore
+
+          // Define interface for leaderboard player data
+          interface LeaderboardPlayer {
+            address: string;
+            currentPoints: number;
+            highestPoints: number;
+            updatedAt: string;
+          }
+          data.leaderboard.forEach((player: LeaderboardPlayer, index: number) => {
+            const scoreItem = document.createElement('div');
+            scoreItem.className = 'score-item';
+            
+            const rankName = document.createElement('div');
+            rankName.innerHTML = `<span style="color: #ff00ff;">#${index + 1}</span> ${player.address.substring(0, 6)}...${player.address.substring(player.address.length - 4)}`;
+            
+            const scoreWallet = document.createElement('div');
+            scoreWallet.className = 'text-right';
+            scoreWallet.innerHTML = `
+              <div style="color: #00ffff;">${player.currentPoints.toLocaleString()} PTS</div>
+            `;
+            
+            scoreItem.appendChild(rankName);
+            scoreItem.appendChild(scoreWallet);
+            scoresList.appendChild(scoreItem);
+          });
+        } else {
+          scoresList.innerHTML = '<div class="text-center my-4">NO SCORES FOUND</div>';
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching leaderboard:', error);
+      
+      // Show error message
+      const scoresList = document.getElementById('scores-list');
+      if (scoresList) {
+        scoresList.innerHTML = '<div class="text-center my-4 text-red-500">ERROR LOADING LEADERBOARD</div>';
+      }
+    }
+  };
+
   return (
     <div className="crt">
       {/* Hidden RainbowKit connect button */}
@@ -979,7 +1042,7 @@ try {
           <button id="stake-btn" className="neon-btn btn-disabled" disabled>STAKE TOKENS</button>
           <button id="start-game-btn" className="neon-btn btn-disabled" disabled>START GAME</button>
           <button id="unstake-btn" className="neon-btn btn-disabled" disabled>UNSTAKE TOKENS</button>
-          {/* <button id="scores-btn" className="neon-btn">SCORES</button> */}
+        <button id="scores-btn" className="neon-btn">SCORES</button> 
         </div>
         
         {/* Info box */}
@@ -996,8 +1059,8 @@ try {
       {/* Scores Page */}
       <div id="scores-container" className="scores-container">
         <button className="close-scores" id="close-scores">✕</button>
-        <h2 className="scores-header">TOP PLAYERS</h2>
-        <div id="scores-list">
+        <div className="scores-header">LEADERBOARD</div>
+        <div id="scores-list" className="scores-list">
           {/* Scores will be populated here */}
         </div>
       </div>
