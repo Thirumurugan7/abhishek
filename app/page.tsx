@@ -1041,7 +1041,7 @@ try {
           </button>
           <button id="stake-btn" className="neon-btn btn-disabled" disabled>GET TOKENS</button>
           <button id="start-game-btn" className="neon-btn btn-disabled" disabled>START GAME</button>
-          //*<button id="unstake-btn" className="neon-btn btn-disabled" disabled>UNSTAKE TOKENS</button>/*
+       
         <button id="scores-btn" className="neon-btn">SCORES</button> 
         </div>
         
