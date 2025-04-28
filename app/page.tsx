@@ -1039,9 +1039,9 @@ try {
           <button className="neon-btn flex justify-center items-center">
             <ConnectButton label='CONNECT WALLET' />
           </button>
-          <button id="stake-btn" className="neon-btn btn-disabled" disabled>STAKE TOKENS</button>
+          <button id="stake-btn" className="neon-btn btn-disabled" disabled>GET TOKENS</button>
           <button id="start-game-btn" className="neon-btn btn-disabled" disabled>START GAME</button>
-          <button id="unstake-btn" className="neon-btn btn-disabled" disabled>UNSTAKE TOKENS</button>
+          //*<button id="unstake-btn" className="neon-btn btn-disabled" disabled>UNSTAKE TOKENS</button>/*
         <button id="scores-btn" className="neon-btn">SCORES</button> 
         </div>
         
@@ -1069,7 +1069,7 @@ try {
       <div id="stake-modal" className="stake-modal">
         <h3 className="text-lg mb-6">STAKE TO PLAY</h3>
         <div className="stake-info">
-          STAKE TOKENS TO UNLOCK THE GAME<br />
+          GET TOKENS TO UNLOCK THE GAME<br />
           MINIMUM STAKE: 300 TOKENS<br />
           PLAY 10 GAMES TO UNLOCK UNSTAKE
         </div>
