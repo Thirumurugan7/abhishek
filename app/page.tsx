@@ -1067,7 +1067,7 @@ try {
       
       {/* Stake Modal */}
       <div id="stake-modal" className="stake-modal">
-        <h3 className="text-lg mb-6">STAKE TO PLAY</h3>
+        <h3 className="text-lg mb-6">GET TOKEN TO PLAY</h3>
         <div className="stake-info">
           GET TOKENS TO UNLOCK THE GAME<br />
           MINIMUM STAKE: 300 TOKENS<br />
@@ -1094,7 +1094,7 @@ try {
         <div className="stake-error" id="stake-error"></div>
         
         <button id="confirm-stake-btn" className="stake-btn" disabled={isPending}>
-          {isPending ? 'PROCESSING...' : 'STAKE TOKENS'}
+          {isPending ? 'PROCESSING...' : 'GET TOKENS'}
         </button>
         
         <button id="unstake-btn" className="unstake-btn" disabled>UNSTAKE TOKENS</button>
