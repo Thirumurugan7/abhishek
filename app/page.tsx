@@ -262,7 +262,7 @@ export default function PlayPage() {
       // Reset confirm button
       const confirmStakeBtn = document.getElementById('confirm-stake-btn');
       if (confirmStakeBtn) {
-        confirmStakeBtn.textContent = 'GET TOKENS';
+        confirmStakeBtn.textContent = 'STAKE TOKENS';
         (confirmStakeBtn as HTMLButtonElement).disabled = false;
       }
       
@@ -1039,9 +1039,9 @@ try {
           <button className="neon-btn flex justify-center items-center">
             <ConnectButton label='CONNECT WALLET' />
           </button>
-          <button id="stake-btn" className="neon-btn btn-disabled" disabled>GET TOKENS</button>
+          <button id="stake-btn" className="neon-btn btn-disabled" disabled>STAKE TOKENS</button>
           <button id="start-game-btn" className="neon-btn btn-disabled" disabled>START GAME</button>
-       
+          <button id="unstake-btn" className="neon-btn btn-disabled" disabled>UNSTAKE TOKENS</button>
         <button id="scores-btn" className="neon-btn">SCORES</button> 
         </div>
         
@@ -1067,9 +1067,9 @@ try {
       
       {/* Stake Modal */}
       <div id="stake-modal" className="stake-modal">
-        <h3 className="text-lg mb-6">GET TOKEN TO PLAY</h3>
+        <h3 className="text-lg mb-6">STAKE TO PLAY</h3>
         <div className="stake-info">
-          GET TOKENS TO UNLOCK THE GAME<br />
+          STAKE TOKENS TO UNLOCK THE GAME<br />
           MINIMUM STAKE: 300 TOKENS<br />
           PLAY 10 GAMES TO UNLOCK UNSTAKE
         </div>
@@ -1094,7 +1094,7 @@ try {
         <div className="stake-error" id="stake-error"></div>
         
         <button id="confirm-stake-btn" className="stake-btn" disabled={isPending}>
-          {isPending ? 'PROCESSING...' : 'GET TOKENS'}
+          {isPending ? 'PROCESSING...' : 'STAKE TOKENS'}
         </button>
         
         <button id="unstake-btn" className="unstake-btn" disabled>UNSTAKE TOKENS</button>
