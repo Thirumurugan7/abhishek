@@ -249,25 +249,25 @@ export default function PlayPage() {
     console.log("amount:", amount);
     console.log("parseEther(amount.toString()):", parseEther(amount.toString()));
 
-    if (balance && balance < parseEther(amount.toString())) {
-      console.log("Not enough balance");
+    // if (balance && balance < parseEther(amount.toString())) {
+    //   console.log("Not enough balance");
       
-      // Show error message
-      const stakeError = document.getElementById('stake-error');
-      if (stakeError) {
-        stakeError.textContent = `INSUFFICIENT BALANCE: YOU NEED ${amount} ASTR BUT ONLY HAVE ${parseFloat(formatEther(balance)).toFixed(2)} ASTR`;
-        stakeError.style.display = 'block';
-      }
+    //   // Show error message
+    //   const stakeError = document.getElementById('stake-error');
+    //   if (stakeError) {
+    //     stakeError.textContent = `INSUFFICIENT BALANCE: YOU NEED ${amount} ASTR BUT ONLY HAVE ${parseFloat(formatEther(balance)).toFixed(2)} ASTR`;
+    //     stakeError.style.display = 'block';
+    //   }
       
-      // Reset confirm button
-      const confirmStakeBtn = document.getElementById('confirm-stake-btn');
-      if (confirmStakeBtn) {
-        confirmStakeBtn.textContent = 'STAKE TOKENS';
-        (confirmStakeBtn as HTMLButtonElement).disabled = false;
-      }
+    //   // Reset confirm button
+    //   const confirmStakeBtn = document.getElementById('confirm-stake-btn');
+    //   if (confirmStakeBtn) {
+    //     confirmStakeBtn.textContent = 'STAKE TOKENS';
+    //     (confirmStakeBtn as HTMLButtonElement).disabled = false;
+    //   }
       
-      return;
-    }
+    //   return;
+    // }
     if (!addresss) return;
     
 
@@ -305,46 +305,46 @@ export default function PlayPage() {
     console.log("allowanceBigInt:", allowanceBigInt);
     console.log("amountBigInt:", amountBigInt);
 
-    if (allowanceBigInt < amountBigInt) {
-      console.log("Approval required");
+  //   if (allowanceBigInt < amountBigInt) {
+  //     console.log("Approval required");
       
-      // Show approving modal
+  //     // Show approving modal
    
 
-      const astrAmountInWei = parseEther(amount.toString());
+  //     const astrAmountInWei = parseEther(amount.toString());
 
       
-      // Call approve with the calculated amount
-      const approveHash = await writeContractAsync({
-          address: '0x2CAE934a1e84F693fbb78CA5ED3B0A6893259441',
-          abi: [{
-              "inputs": [
-                  {"name": "_spender", "type": "address"},
-                  {"name": "_value", "type": "uint256"}
-              ],
-              "name": "approve",
-              "outputs": [{"name": "", "type": "bool"}],
-              "type": "function"
-          }],
-          functionName: 'approve',
-          args: ['0x15c416e97Ab1f7B60afA2558B4Acf92a33A886FA', astrAmountInWei]
-      });
+  //     // Call approve with the calculated amount
+  //     const approveHash = await writeContractAsync({
+  //         address: '0x2CAE934a1e84F693fbb78CA5ED3B0A6893259441',
+  //         abi: [{
+  //             "inputs": [
+  //                 {"name": "_spender", "type": "address"},
+  //                 {"name": "_value", "type": "uint256"}
+  //             ],
+  //             "name": "approve",
+  //             "outputs": [{"name": "", "type": "bool"}],
+  //             "type": "function"
+  //         }],
+  //         functionName: 'approve',
+  //         args: ['0x15c416e97Ab1f7B60afA2558B4Acf92a33A886FA', astrAmountInWei]
+  //     });
 
-      // Wait for approval transaction
-      if (approveHash) {
-          try {
-              await publicClient?.waitForTransactionReceipt({ 
-                  hash: approveHash as `0x${string}` 
-              });
-              console.log("Approval transaction confirmed");
-          } catch (error) {
-              console.error("Error waiting for approval:", error);
-              throw error;
-          }
-      }
+  //     // Wait for approval transaction
+  //     if (approveHash) {
+  //         try {
+  //             await publicClient?.waitForTransactionReceipt({ 
+  //                 hash: approveHash as `0x${string}` 
+  //             });
+  //             console.log("Approval transaction confirmed");
+  //         } catch (error) {
+  //             console.error("Error waiting for approval:", error);
+  //             throw error;
+  //         }
+  //     }
 
 
-  }
+  // }
 
 
 
@@ -352,17 +352,41 @@ export default function PlayPage() {
     const astrAmountInWei = parseEther(amount.toString());
     console.log("No allowance");
     const stakeHash = await writeContractAsync({
-      address: '0x15c416e97Ab1f7B60afA2558B4Acf92a33A886FA',
+      address: '0x16c70B621Ba8A14c13804B2318a0BcBf0D21Ec98',
       abi: [{
           "inputs": [
-              {"name": "_amount", "type": "uint256"}
+              {"name": "_receiver", "type": "address"},
+              {"name": "_quantity", "type": "uint256"}, 
+              {"name": "_currency", "type": "address"},
+              {"name": "_pricePerToken", "type": "uint256"},
+              {"name": "_allowlistProof", "type": "tuple", "components": [
+                  {"name": "proof", "type": "bytes32[]"},
+                  {"name": "quantityLimitPerWallet", "type": "uint256"},
+                  {"name": "pricePerToken", "type": "uint256"},
+                  {"name": "currency", "type": "address"}
+              ]},
+              {"name": "_data", "type": "bytes"}
           ],
-          "name": "stake",
+          "name": "claim",
           "outputs": [],
-          "type": "function"
+          "type": "function",
+          "stateMutability": "payable"
       }],
-      functionName: 'stake',
-      args: [astrAmountInWei]
+      functionName: 'claim',
+      args: [
+        '0x2B258418ee8ba6822472F722bC558Ce62D42280D',
+        BigInt('1000000000000000000'),
+        '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+        BigInt('500000000000'),
+        {
+          proof: [],
+          quantityLimitPerWallet: BigInt('0'),
+          pricePerToken: BigInt('500000000000'),
+          currency: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+        },
+        '0x'
+      ], 
+      value: BigInt(parseEther("0.0000005"))
   });
 
   await publicClient?.waitForTransactionReceipt({ 
@@ -451,7 +475,7 @@ console.log("Stake transaction confirmed");
       // Update UI
       const stakeSuccess = document.getElementById('stake-success');
       if (stakeSuccess) {
-        stakeSuccess.textContent = 'STAKE SUCCESSFUL! +1000 POINTS AWARDED!';
+        stakeSuccess.textContent = 'PURCHASE SUCCESSFUL! +1000 POINTS AWARDED!';
         stakeSuccess.style.display = 'block';
       }
       
@@ -481,7 +505,7 @@ console.log("Stake transaction confirmed");
       // Reset button
       const confirmStakeBtn = document.getElementById('confirm-stake-btn');
       if (confirmStakeBtn) {
-        confirmStakeBtn.textContent = 'STAKE TOKENS';
+      confirmStakeBtn.textContent = 'PURCHASE TOKENS';
         (confirmStakeBtn as HTMLButtonElement).disabled = false;
       }
     }
@@ -581,7 +605,7 @@ try {
       const stakeBtn = document.getElementById('stake-btn');
       if (stakeBtn) {
         stakeBtn.classList.remove('btn-disabled');
-        stakeBtn.textContent = 'STAKE TOKENS';
+        stakeBtn.textContent = 'PURCHASE TOKENS';
         (stakeBtn as HTMLButtonElement).disabled = false;
       }
       
@@ -805,9 +829,9 @@ try {
         const amount = parseFloat(stakeInput.value);
         const stakeError = document.getElementById('stake-error');
         
-        if (isNaN(amount) || amount < 10) {
+        if (isNaN(amount) || amount < 300) {
           if (stakeError) {
-            stakeError.textContent = 'PLEASE ENTER A VALID AMOUNT (MIN 10)';
+            stakeError.textContent = 'PLEASE ENTER A VALID AMOUNT (MIN 300)';
             stakeError.style.display = 'block';
           }
           return;
@@ -1039,9 +1063,9 @@ try {
           <button className="neon-btn flex justify-center items-center">
             <ConnectButton label='CONNECT WALLET' />
           </button>
-          <button id="stake-btn" className="neon-btn btn-disabled" disabled>STAKE TOKENS</button>
+          <button id="stake-btn" className="neon-btn btn-disabled" disabled>PURCHASE TOKENS</button>
           <button id="start-game-btn" className="neon-btn btn-disabled" disabled>START GAME</button>
-          <button id="unstake-btn" className="neon-btn btn-disabled" disabled>UNSTAKE TOKENS</button>
+          {/* <button id="unstake-btn" className="neon-btn btn-disabled" disabled>UNSTAKE TOKENS</button> */}
         <button id="scores-btn" className="neon-btn">SCORES</button> 
         </div>
         
@@ -1067,10 +1091,10 @@ try {
       
       {/* Stake Modal */}
       <div id="stake-modal" className="stake-modal">
-        <h3 className="text-lg mb-6">STAKE TO PLAY</h3>
+        <h3 className="text-lg mb-6">PURCHASE TOKENS TO PLAY</h3>
         <div className="stake-info">
-          STAKE TOKENS TO UNLOCK THE GAME<br />
-          MINIMUM STAKE: 300 TOKENS<br />
+          PURCHASE TOKENS TO UNLOCK THE GAME<br />
+          MINIMUM PURCHASE: 300 TOKENS<br />
           PLAY 10 GAMES TO UNLOCK UNSTAKE
         </div>
         
@@ -1085,7 +1109,7 @@ try {
           BALANCE: {balance ? formatEther(balance) : '0'}
         </div>
         
-        <input type="number" id="stake-input" className="stake-input" placeholder="ENTER STAKE AMOUNT" min="10" step="1" />
+        <input type="number" id="stake-input" className="stake-input" placeholder="ENTER AMOUNT" min="10" step="1" />
         
         <div className="play-counter" id="play-counter">
           GAMES PLAYED: {gameState.gamesPlayed}/{gameState.gamesRequiredToUnstake}
@@ -1094,13 +1118,13 @@ try {
         <div className="stake-error" id="stake-error"></div>
         
         <button id="confirm-stake-btn" className="stake-btn" disabled={isPending}>
-          {isPending ? 'PROCESSING...' : 'STAKE TOKENS'}
+          {isPending ? 'PROCESSING...' : 'PURCHASING TOKENS'}
         </button>
         
         <button id="unstake-btn" className="unstake-btn" disabled>UNSTAKE TOKENS</button>
         
         <div className="stake-success" id="stake-success">
-          STAKE SUCCESSFUL! GAME UNLOCKED.
+          PURCHASE SUCCESSFUL! GAME UNLOCKED.
         </div>
         
         <button id="close-stake-modal" className="neon-btn w-full mt-4">CANCEL</button>
