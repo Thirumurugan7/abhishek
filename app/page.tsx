@@ -262,7 +262,7 @@ export default function PlayPage() {
       // Reset confirm button
       const confirmStakeBtn = document.getElementById('confirm-stake-btn');
       if (confirmStakeBtn) {
-        confirmStakeBtn.textContent = 'STAKE TOKENS';
+        confirmStakeBtn.textContent = 'GET TOKENS';
         (confirmStakeBtn as HTMLButtonElement).disabled = false;
       }
       
