@@ -480,7 +480,7 @@ if(res && res.status === "success") {
     const stakeBtn = document.getElementById('stake-btn');
     if (stakeBtn) {
       stakeBtn.classList.add('btn-disabled');
-      stakeBtn.textContent = `STAKED: ${amount} TOKENS`;
+      stakeBtn.textContent = `PURCHASED: ${amount} TOKENS`;
       (stakeBtn as HTMLButtonElement).disabled = true;
     }
 }
@@ -559,7 +559,7 @@ if(res && res.status === "success") {
     console.log(stakedBalance);
     console.log(stakedBalance?.[2]);
     if (!stakedBalance) {
-        throw new Error('Could not get staked balance');
+        throw new Error('Could not get Purchase balance');
     }
 
     const hash = await writeContractAsync({
@@ -841,9 +841,9 @@ try {
         const amount = parseFloat(stakeInput.value);
         const stakeError = document.getElementById('stake-error');
         
-        if (isNaN(amount) || amount < 300) {
+        if (isNaN(amount) || amount < 1000) {
           if (stakeError) {
-            stakeError.textContent = 'PLEASE ENTER A VALID AMOUNT (MIN 300)';
+            stakeError.textContent = 'PLEASE ENTER A VALID AMOUNT (MIN 1000)';
             stakeError.style.display = 'block';
           }
           return;
@@ -1106,14 +1106,15 @@ try {
         <h3 className="text-lg mb-6">PURCHASE TOKENS TO PLAY</h3>
         <div className="stake-info">
           PURCHASE TOKENS TO UNLOCK THE GAME<br />
-          MINIMUM PURCHASE: 300 TOKENS<br />
+          MINIMUM PURCHASE: 1000 TOKENS<br />
           PLAY 10 GAMES TO UNLOCK UNSTAKE
         </div>
         
         <div className="stake-amounts">
-          <div className="stake-amount" data-amount="300">3000</div>
-          <div className="stake-amount" data-amount="500">5000</div>
-          <div className="stake-amount" data-amount="1000">10000</div>
+          <div className="stake-amount" data-amount="3000">3000</div>
+          <div className="stake-amount" data-amount="5000">5000</div>
+          <div className="stake-amount" data-amount="10000">10000</div>
+          <div className="stake-amount" data-amount="15000">15000</div>
         </div>
 
         <div className="stake-balance">
