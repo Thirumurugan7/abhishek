@@ -391,102 +391,112 @@ export default function PlayPage() {
       value: BigInt(parseEther("0.0000005"))
   });
 
-  await publicClient?.waitForTransactionReceipt({ 
+const res =   await publicClient?.waitForTransactionReceipt({ 
     hash: stakeHash as `0x${string}` 
 });
+
+console.log("res:", res);
 
 
 console.log("Stake transaction confirmed");
 
   
+if(res && res.status === "success") {
+    // Update game state
+    setGameState(prev => ({
+      ...prev,
+      stakedAmount: amount,
+      gameUnlocked: true,
+      gamesPlayed: 0
+    }));
+
+    try {
+      console.log("Awarding points for staking"); // Add logging
+      
+      const response = await fetch('/api/points', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          address: addresss,
+          points: gameState.points + amount * 10,
+          reason: 'Staking tokens'
+        }),
+      });
+      
+      const data = await response.json();
+      console.log("Points API response:", data); // Add logging
+      
+      if (data && data.currentPoints !== undefined) {
+        const updatedPoints = data.currentPoints;
+        
+        setGameState(prev => ({
+          ...prev,
+          points: updatedPoints,
+          stakedAmount: amount,
+          gameUnlocked: true
+        }));
+        
+        // Update points display
+        updatePointsDisplay(updatedPoints);
+        
+        // Check if points meet threshold
+        checkPointsThreshold(updatedPoints);
+        
+        // Also fetch claims data to ensure everything is in sync
+        if (addresss) {
+          fetchClaimsData(addresss);
+        }
+        
+        // Update UI elements directly
+        const startGameBtn = document.getElementById('start-game-btn');
+        if (startGameBtn && updatedPoints >= 1000) {
+          startGameBtn.classList.remove('btn-disabled');
+          (startGameBtn as HTMLButtonElement).disabled = false;
+          startGameBtn.textContent = 'START GAME';
+        }
+        
+        // Update the info box
+        const infoBox = document.getElementById('info-box-text');
+        if (infoBox && updatedPoints >= 1000) {
+          infoBox.innerHTML = `
+            GAME UNLOCKED!<br />
+            YOUR POINTS: ${updatedPoints}<br />
+            READY TO PLAY
+          `;
+        }
+      }
+    } catch (error) {
+      console.error('Error updating points after staking:', error);
+    }
+
+    const stakeSuccess = document.getElementById('stake-success');
+    if (stakeSuccess) {
+      stakeSuccess.textContent = 'PURCHASE SUCCESSFUL! +1000 POINTS AWARDED!';
+      stakeSuccess.style.display = 'block';
+    }
+    
+    const stakeBtn = document.getElementById('stake-btn');
+    if (stakeBtn) {
+      stakeBtn.classList.add('btn-disabled');
+      stakeBtn.textContent = `STAKED: ${amount} TOKENS`;
+      (stakeBtn as HTMLButtonElement).disabled = true;
+    }
+}
+
 
     
       
 
       
-      // Update game state
-      setGameState(prev => ({
-        ...prev,
-        stakedAmount: amount,
-        gameUnlocked: true,
-        gamesPlayed: 0
-      }));
+  
       
       // Award 1000 points for staking
-      try {
-        console.log("Awarding points for staking"); // Add logging
-        
-        const response = await fetch('/api/points', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            address: addresss,
-            points: gameState.points + amount * 10,
-            reason: 'Staking tokens'
-          }),
-        });
-        
-        const data = await response.json();
-        console.log("Points API response:", data); // Add logging
-        
-        if (data && data.currentPoints !== undefined) {
-          const updatedPoints = data.currentPoints;
-          
-          setGameState(prev => ({
-            ...prev,
-            points: updatedPoints,
-            stakedAmount: amount,
-            gameUnlocked: true
-          }));
-          
-          // Update points display
-          updatePointsDisplay(updatedPoints);
-          
-          // Check if points meet threshold
-          checkPointsThreshold(updatedPoints);
-          
-          // Also fetch claims data to ensure everything is in sync
-          if (addresss) {
-            fetchClaimsData(addresss);
-          }
-          
-          // Update UI elements directly
-          const startGameBtn = document.getElementById('start-game-btn');
-          if (startGameBtn && updatedPoints >= 1000) {
-            startGameBtn.classList.remove('btn-disabled');
-            (startGameBtn as HTMLButtonElement).disabled = false;
-            startGameBtn.textContent = 'START GAME';
-          }
-          
-          // Update the info box
-          const infoBox = document.getElementById('info-box-text');
-          if (infoBox && updatedPoints >= 1000) {
-            infoBox.innerHTML = `
-              GAME UNLOCKED!<br />
-              YOUR POINTS: ${updatedPoints}<br />
-              READY TO PLAY
-            `;
-          }
-        }
-      } catch (error) {
-        console.error('Error updating points after staking:', error);
-      }
+  
       
       // Update UI
-      const stakeSuccess = document.getElementById('stake-success');
-      if (stakeSuccess) {
-        stakeSuccess.textContent = 'PURCHASE SUCCESSFUL! +1000 POINTS AWARDED!';
-        stakeSuccess.style.display = 'block';
-      }
-      
-      const stakeBtn = document.getElementById('stake-btn');
-      if (stakeBtn) {
-        stakeBtn.classList.add('btn-disabled');
-        stakeBtn.textContent = `STAKED: ${amount} TOKENS`;
-        (stakeBtn as HTMLButtonElement).disabled = true;
-      }
+  
       
       // Close modal after delay
       setTimeout(() => {
