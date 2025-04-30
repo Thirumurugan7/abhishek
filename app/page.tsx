@@ -1111,10 +1111,9 @@ try {
         </div>
         
         <div className="stake-amounts">
-          <div className="stake-amount" data-amount="300">300</div>
-          <div className="stake-amount" data-amount="500">500</div>
-          <div className="stake-amount" data-amount="1000">1000</div>
-          <div className="stake-amount" data-amount="5000">5000</div>
+          <div className="stake-amount" data-amount="300">3000</div>
+          <div className="stake-amount" data-amount="500">5000</div>
+          <div className="stake-amount" data-amount="1000">10000</div>
         </div>
 
         <div className="stake-balance">
