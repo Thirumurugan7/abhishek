@@ -354,7 +354,7 @@ export default function PlayPage() {
     console.log("astrAmountInWei:", astrAmountInWei);
     console.log("No allowance");
     const stakeHash = await writeContractAsync({
-      address: '0x16c70B621Ba8A14c13804B2318a0BcBf0D21Ec98',
+      address: '0x155a0d960E76909905446118499Df6E0D0123122',
       abi: [{
           "inputs": [
               {"name": "_receiver", "type": "address"},
