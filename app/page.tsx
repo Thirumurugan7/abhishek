@@ -391,7 +391,7 @@ export default function PlayPage() {
       }],
       functionName: 'claim',
       args: [
-        '0x2B258418ee8ba6822472F722bC558Ce62D42280D',
+        addresss as `0x${string}`,
         parseEther(amount.toString()),
         '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
         ethPaymentInWei,
