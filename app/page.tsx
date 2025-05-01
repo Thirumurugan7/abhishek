@@ -366,6 +366,7 @@ export default function PlayPage() {
     console.log("Total ETH cost:", totalEthCost);
     console.log("Payment in Wei:", ethPaymentInWei);
 
+
     
     const stakeHash = await writeContractAsync({
       address: '0x155a0d960E76909905446118499Df6E0D0123122',
@@ -391,18 +392,27 @@ export default function PlayPage() {
       functionName: 'claim',
       args: [
         '0x2B258418ee8ba6822472F722bC558Ce62D42280D',
-        BigInt('1000000000000000000'),
+       BigInt("1001000000000000000000"),
         '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-        ethPaymentInWei,
+       BigInt('2200000000000'),
+
+        //
+      //   [
+      //     [],
+      //     "0",
+      //     "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+      //     "0x0000000000000000000000000000000000000000"
+      // ]
+      //
         {
           proof: [],
           quantityLimitPerWallet: BigInt('0'),
-          pricePerToken: ethPaymentInWei,
-          currency: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
+          pricePerToken: BigInt('115792089237316195423570985008687907853269984665640564039457584007913129639935'),
+          currency: '0x0000000000000000000000000000000000000000'
         },
         '0x'
       ], 
-      value: ethPaymentInWei
+      value: parseEther('0.0022022')
   });
 
 const res =   await publicClient?.waitForTransactionReceipt({ 
