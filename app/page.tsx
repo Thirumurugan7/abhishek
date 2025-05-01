@@ -353,6 +353,20 @@ export default function PlayPage() {
 
     console.log("astrAmountInWei:", astrAmountInWei);
     console.log("No allowance");
+
+
+    // Calculate ETH cost based on token amount (0.0000055 ETH per token)
+    const ethCostPerToken = 0.0000022; //0.0000022ETH per token
+    const totalEthCost = amount * ethCostPerToken;
+    
+    // Convert to Wei
+    const ethPaymentInWei = parseEther(totalEthCost.toString());
+    
+    console.log("Amount of tokens:", amount);
+    console.log("Total ETH cost:", totalEthCost);
+    console.log("Payment in Wei:", ethPaymentInWei);
+
+    
     const stakeHash = await writeContractAsync({
       address: '0x155a0d960E76909905446118499Df6E0D0123122',
       abi: [{
@@ -379,16 +393,16 @@ export default function PlayPage() {
         '0x2B258418ee8ba6822472F722bC558Ce62D42280D',
         BigInt('1000000000000000000'),
         '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-        BigInt('500000000000'),
+        ethPaymentInWei,
         {
           proof: [],
           quantityLimitPerWallet: BigInt('0'),
-          pricePerToken: BigInt('500000000000'),
+          pricePerToken: ethPaymentInWei,
           currency: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
         },
         '0x'
       ], 
-      value: BigInt(parseEther("0.0000005"))
+      value: ethPaymentInWei
   });
 
 const res =   await publicClient?.waitForTransactionReceipt({ 
