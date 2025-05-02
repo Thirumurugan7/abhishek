@@ -394,7 +394,7 @@ export default function PlayPage() {
         addresss as `0x${string}`,
         parseEther(amount.toString()),
         '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-        ethPaymentInWei,
+        BigInt("2200000000000"),
 
         //
       //   [
