@@ -356,7 +356,7 @@ export default function PlayPage() {
 
 
     // Calculate ETH cost based on token amount (0.0000055 ETH per token)
-    const ethCostPerToken = 0.0000018; //0.0000018ETH per token
+    const ethCostPerToken = 0.0000015; //0.0000015ETH per token
     const totalEthCost = amount * ethCostPerToken;
     
     // Convert to Wei
@@ -394,7 +394,7 @@ export default function PlayPage() {
         addresss as `0x${string}`,
         parseEther(amount.toString()),
         '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-        BigInt("1800000000000"),
+        BigInt("1500000000000"),
 
         //
       //   [
@@ -444,7 +444,7 @@ if(res && res.status === "success") {
         },
         body: JSON.stringify({
           address: addresss,
-          points: gameState.points + amount * 10,
+          points: gameState.points + amount * 1,
           reason: 'Staking tokens'
         }),
       });
