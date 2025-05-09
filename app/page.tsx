@@ -1135,7 +1135,7 @@ try {
         </div>
         
         <div className="stake-amounts">
-          <div className="stake-amount" data-amount="3000">3000</div>
+          <div className="stake-amount" data-amount="1000">1000</div>
           <div className="stake-amount" data-amount="5000">5000</div>
           <div className="stake-amount" data-amount="10000">10000</div>
           <div className="stake-amount" data-amount="15000">15000</div>
