@@ -356,7 +356,7 @@ export default function PlayPage() {
 
 
     // Calculate ETH cost based on token amount (0.0000055 ETH per token)
-    const ethCostPerToken = 0.0000022; //0.0000022ETH per token
+    const ethCostPerToken = 0.0000018; //0.0000018ETH per token
     const totalEthCost = amount * ethCostPerToken;
     
     // Convert to Wei
@@ -394,7 +394,7 @@ export default function PlayPage() {
         addresss as `0x${string}`,
         parseEther(amount.toString()),
         '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
-        BigInt("2200000000000"),
+        BigInt("1800000000000"),
 
         //
       //   [
